@@ -42,5 +42,6 @@ func (ra *Adaptor) Routes() http.Handler {
 	mux.Use(middleware.Timeout(2500 * time.Millisecond))
 	mux.Use(middleware.Throttle(1))
 	mux.Use(httprate.LimitByIP(100, 1*time.Minute))
+	mux.Route("/api/v1/auth", ra.AuthRoutes)
 	return mux
 }

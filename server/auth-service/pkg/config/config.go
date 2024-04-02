@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
-	"gorm.io/gorm"
 )
 
 const DEFAULT_ENVIRONMENT = "development"
@@ -19,7 +18,6 @@ var env string
 var cfg *Config
 
 type Config struct {
-	DataBase *gorm.DB
 	Env      map[string]any
 	DataChan chan any
 	Logger   *log.Logger
@@ -46,7 +44,6 @@ type ReadValue struct {
 
 func Initialize() *Config {
 	cfg = &Config{
-		DataBase: nil,
 		Env:      make(map[string]any),
 		DataChan: make(chan any),
 		Logger:   log.New(os.Stdout, "", log.Ldate|log.Ltime),
