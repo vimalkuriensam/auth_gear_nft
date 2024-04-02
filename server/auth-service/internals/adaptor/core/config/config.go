@@ -7,64 +7,49 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/spf13/viper"
+	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
 )
 
 const DEFAULT_ENVIRONMENT = "development"
 
+type config *models.Config
+
 var env string
-var cfg *Config
+var cfg *models.Config
 
-type Config struct {
-	Env      map[string]any
-	DataChan chan any
-	Logger   *log.Logger
-	Response *JSONResponse
-	Error    *ErrorResponse
+type Adaptor struct {
+	environment string
+	config      *models.Config
 }
 
-type JSONResponse struct {
-	Message string `json:"message"`
-	Data    any    `json:"data"`
-}
-
-type ErrorResponse struct {
-	Status    int       `json:"status"`
-	Path      string    `json:"path"`
-	Message   string    `json:"message"`
-	Timestamp time.Time `json:"timestamp"`
-}
-
-type ReadValue struct {
-	B []byte
-	D interface{}
-}
-
-func Initialize() *Config {
-	cfg = &Config{
+func Initialize() *Adaptor {
+	cfg = &models.Config{
 		Env:      make(map[string]any),
 		DataChan: make(chan any),
 		Logger:   log.New(os.Stdout, "", log.Ldate|log.Ltime),
-		Response: &JSONResponse{},
-		Error:    &ErrorResponse{},
+		Response: &models.JSONResponse{},
+		Error:    &models.ErrorResponse{},
 	}
-	return cfg
+	return &Adaptor{
+		environment: "",
+		config:      cfg,
+	}
 }
 
-func GetConfig() *Config {
-	return cfg
+func (cfgAd *Adaptor) GetConfig() *models.Config {
+	return cfgAd.config
 }
 
-func (config *Config) LoadEnvironment() error {
+func (cfgAd *Adaptor) LoadEnvironment() error {
 	flag.StringVar(&env, "envflag", DEFAULT_ENVIRONMENT, "sets the default environment stage")
 	flag.Parse()
 	if env == "production" {
 		for _, value := range os.Environ() {
 			e := strings.Split(value, "=")
 			k, v := e[0], e[1]
-			config.Env[k] = v
+			cfgAd.config.Env[k] = v
 		}
 	} else {
 		wd, _ := os.Getwd()
@@ -74,7 +59,7 @@ func (config *Config) LoadEnvironment() error {
 			return fmt.Errorf("error reading config file %v", err)
 		}
 		for key, value := range viper.AllSettings() {
-			config.Env[key] = value
+			cfgAd.config.Env[key] = value
 		}
 	}
 	return nil

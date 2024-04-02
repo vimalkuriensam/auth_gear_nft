@@ -6,22 +6,24 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/pkg/config"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/pkg/models"
+	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
 )
 
 type Adapter struct {
-	DB *pgx.Conn
+	config ports.ConfigPort
+	DB     *pgx.Conn
 }
 
-func Initialize() *Adapter {
+func Initialize(cfg ports.ConfigPort) *Adapter {
 	return &Adapter{
-		DB: nil,
+		config: cfg,
+		DB:     nil,
 	}
 }
 
 func (dbAd *Adapter) DBInit() error {
-	cfg := config.GetConfig()
+	cfg := dbAd.config.GetConfig()
 	env := cfg.Env
 	host := env["db_host"]
 	port := env["db_port"]

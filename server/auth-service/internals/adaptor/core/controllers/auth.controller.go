@@ -1,12 +1,6 @@
-package core
+package controllers
 
 import "net/http"
-
-type Adaptor struct{}
-
-func Initialize() *Adaptor {
-	return &Adaptor{}
-}
 
 func (cAd *Adaptor) RegisterController(w http.ResponseWriter, req *http.Request) {
 
