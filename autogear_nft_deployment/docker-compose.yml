@@ -13,7 +13,7 @@ services:
       volumes:
         - ../app-data/pg:/var/lib/postgresql/data
       networks:
-        - go-ms-service
+        - autogear-nft-service
 
 
 networks:
