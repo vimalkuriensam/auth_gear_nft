@@ -9,12 +9,17 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httplog"
 	"github.com/go-chi/httprate"
+	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
 )
 
-type Adaptor struct{}
+type Adaptor struct {
+	api ports.AuthApiPort
+}
 
-func Initialize() *Adaptor {
-	return &Adaptor{}
+func Initialize(api ports.AuthApiPort) *Adaptor {
+	return &Adaptor{
+		api: api,
+	}
 }
 
 func (ra *Adaptor) Routes() http.Handler {
