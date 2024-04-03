@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -25,11 +26,14 @@ func Initialize(cfg ports.ConfigPort) *Adapter {
 func (dbAd *Adapter) DBInit() error {
 	cfg := dbAd.config.GetConfig()
 	env := cfg.Env
-	host := env["db_host"]
-	port := env["db_port"]
-	user := env["db_user"]
-	password := env["db_password"]
-	dbname := env["db_database"]
+	host, ok1 := env["db_host"]
+	port, ok2 := env["db_port"]
+	user, ok3 := env["db_user"]
+	password, ok4 := env["db_password"]
+	dbname, ok5 := env["db_database"]
+	if !ok1 || !ok2 || !ok3 || !ok4 || !ok5 {
+		return errors.New("environment not set. please check host, port, username, password and database name")
+	}
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, host, port, dbname)
 	var maxRetries int
 	var err error
@@ -51,6 +55,10 @@ func (dbAd *Adapter) DBInit() error {
 	_, err = db.Exec(context.Background(), CreateUserTableQuery())
 	if err != nil {
 		return fmt.Errorf("error creating the table: %v", err.Error())
+	}
+	_, err = db.Exec(context.Background(), AlterTableIDSequence())
+	if err != nil {
+		return fmt.Errorf("error altering id sequence: %v", err.Error())
 	}
 	dbAd.DB = db
 	return nil

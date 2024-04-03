@@ -13,10 +13,14 @@ func CreateUserTableQuery() string {
 	)`
 }
 
+func AlterTableIDSequence() string {
+	return `ALTER SEQUENCE ID restart 1000`
+}
+
 func InsertUserQuery() string {
-	return `INSERT INTO users (first_name, last_name, email, password, active, user_type, branch_id, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, true, $5, $6, $7, $8)
-		RETURNING id, first_name, last_name, email, active, user_type, branch_id, created_at, updated_at`
+	return `INSERT INTO users (first_name, last_name, email, password, active, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, true, $5, $6)
+		RETURNING id, first_name, last_name, email, active, created_at, updated_at`
 }
 
 func InsertInitUserQuery() string {

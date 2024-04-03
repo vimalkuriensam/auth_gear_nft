@@ -24,5 +24,5 @@ func main() {
 	routesPort := routes.Initialize(apiPort)
 	//Initialize and start the server
 	serverPort := server.Initialize(configPort, routesPort)
-	serverPort.Server()
+	serverPort.Serve()
 }

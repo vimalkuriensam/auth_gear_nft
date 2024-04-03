@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
@@ -26,10 +27,11 @@ func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {}
 
 func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) {
 	user_data, err := appAd.controller.ReadUserRequestController(w, req)
-	if err != nil {
-		if _, err = appAd.db.InsertUser(user_data); err != nil {
-			appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, user_data, "User Created")
+	if err == nil {
+		if inserted_data, err := appAd.db.InsertUser(user_data); err == nil {
+			appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, inserted_data, "User Created")
 		} else {
+			fmt.Println(err.Error())
 			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
 		}
 	} else {

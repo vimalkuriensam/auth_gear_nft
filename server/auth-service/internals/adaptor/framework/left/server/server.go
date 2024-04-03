@@ -19,7 +19,7 @@ func Initialize(cfg ports.ConfigPort, routes ports.RoutesPort) *Adaptor {
 	}
 }
 
-func (server *Adaptor) Server() error {
+func (server *Adaptor) Serve() error {
 	cfg := server.config.GetConfig()
 	cfg.Logger.Printf("Server is running on port %v\n", cfg.Env["port"])
 	return http.ListenAndServe(fmt.Sprintf(":%v", cfg.Env["port"]), server.routes.Routes())
