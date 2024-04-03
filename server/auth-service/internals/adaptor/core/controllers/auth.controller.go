@@ -1,9 +1,22 @@
 package controllers
 
-import "net/http"
+import (
+	"encoding/json"
+	"errors"
+	"net/http"
 
-func (cAd *Adaptor) RegisterController(w http.ResponseWriter, req *http.Request) {
+	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+)
 
+func (cAd *Adaptor) ReadUserRequestController(w http.ResponseWriter, req *http.Request) (models.User, error) {
+	value, err := cAd.config.ReadJSON(req)
+	if err != nil {
+		cAd.config.ErrorJSON(w, req.URL.Path, err.Error(), http.StatusInternalServerError)
+		return models.User{}, errors.New(err.Error())
+	}
+	userReq := models.User{}
+	_ = json.Unmarshal(value.B, &userReq)
+	return userReq, nil
 }
 
 func (cAd *Adaptor) LoginController(w http.ResponseWriter, req *http.Request) {}
@@ -13,3 +26,11 @@ func (cAd *Adaptor) GetUserController(w http.ResponseWriter, req *http.Request) 
 func (cAd *Adaptor) UpdateController(w http.ResponseWriter, req *http.Request) {}
 
 func (cAd *Adaptor) DeleteController(w http.ResponseWriter, req *http.Request) {}
+
+func (cAd *Adaptor) PrintRegistration(w http.ResponseWriter, req *http.Request, success bool, status int, data interface{}, msg string) {
+	if success {
+		cAd.config.WriteJSON(w, http.StatusCreated, data, msg)
+	} else {
+		cAd.config.ErrorJSON(w, req.URL.Path, msg, status)
+	}
+}

@@ -7,11 +7,12 @@ import (
 )
 
 type AuthController interface {
-	RegisterController(http.ResponseWriter, *http.Request)
+	ReadUserRequestController(http.ResponseWriter, *http.Request) (models.User, error)
 	LoginController(http.ResponseWriter, *http.Request)
 	GetUserController(http.ResponseWriter, *http.Request)
 	UpdateController(http.ResponseWriter, *http.Request)
 	DeleteController(http.ResponseWriter, *http.Request)
+	PrintRegistration(http.ResponseWriter, *http.Request, bool, int, interface{}, string)
 }
 
 type ConfigPort interface {
@@ -19,4 +20,5 @@ type ConfigPort interface {
 	LoadEnvironment() error
 	ReadJSON(*http.Request) (models.ReadValue, error)
 	WriteJSON(http.ResponseWriter, int, interface{}, string, ...http.Header)
+	ErrorJSON(http.ResponseWriter, string, string, ...int)
 }
