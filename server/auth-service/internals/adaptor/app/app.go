@@ -3,7 +3,9 @@ package app
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
 )
 
@@ -20,7 +22,18 @@ func Initialize(db ports.DBPort, ctrl ports.AuthController) *Adaptor {
 }
 
 func (appAd *Adaptor) GetUserApi(w http.ResponseWriter, req *http.Request) {
-
+	id := chi.URLParam(req, "id")
+	id_num, err := strconv.Atoi(id)
+	if err != nil {
+		appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	user, err := appAd.db.GetUserByID(uint(id_num))
+	if err != nil {
+		appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User Fetched")
 }
 
 func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {}
