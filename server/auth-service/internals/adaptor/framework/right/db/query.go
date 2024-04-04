@@ -17,6 +17,18 @@ func AlterTableIDSequence() string {
 	return `ALTER SEQUENCE users_id_seq restart 1000 OWNED BY users.id`
 }
 
+func CurrentIDSequence() string {
+	return `SELECT last_value FROM users_id_seq`
+}
+
+func MaxIDSequence() string {
+	return `SELECT MAX(id) FROM users`
+}
+
+func SetSequence() string {
+	return `SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));`
+}
+
 func InsertUserQuery() string {
 	return `INSERT INTO users (first_name, last_name, email, password, active, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, true, $5, $6)

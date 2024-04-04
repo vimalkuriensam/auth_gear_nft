@@ -61,11 +61,32 @@ func (dbAd *Adapter) DBInit() error {
 		return fmt.Errorf("error altering id sequence: %v", err.Error())
 	}
 	dbAd.DB = db
+	isSync := dbAd.CheckPKSync()
+	if !isSync {
+		if err = dbAd.SetPKSync(); err != nil {
+			return fmt.Errorf("error trying to sync the sequence: %v", err.Error())
+		}
+	}
 	return nil
 }
 
 func (dbAd *Adapter) GetDB() *pgx.Conn {
 	return dbAd.DB
+}
+
+func (dbAd *Adapter) CheckPKSync() bool {
+	var sequenceValue, maxID int
+	sequenceQuery := CurrentIDSequence()
+	currentIdQuery := MaxIDSequence()
+	dbAd.DB.QueryRow(context.Background(), sequenceQuery).Scan(&sequenceValue)
+	dbAd.DB.QueryRow(context.Background(), currentIdQuery).Scan(&maxID)
+	return sequenceValue == maxID
+}
+
+func (dbAd *Adapter) SetPKSync() error {
+	setSequenceQuery := SetSequence()
+	_, err := dbAd.DB.Exec(context.Background(), setSequenceQuery)
+	return err
 }
 
 func (dbAd *Adapter) InsertUser(user models.User) (models.User, error) {

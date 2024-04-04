@@ -71,7 +71,8 @@ func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) 
 				appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
 			}
 			var responseData models.UserResponse
-			responseData.User = user_data
+			inserted_data.Password = ""
+			responseData.User = inserted_data
 			responseData.Token = token
 			appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, responseData, "User Created")
 		} else {
