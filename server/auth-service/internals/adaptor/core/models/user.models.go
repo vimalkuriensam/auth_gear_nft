@@ -15,5 +15,5 @@ type User struct {
 
 type UserResponse struct {
 	User  User   `json:"user"`
-	Token string `json:"token"`
+	Token string `json:"token,omitempty"`
 }

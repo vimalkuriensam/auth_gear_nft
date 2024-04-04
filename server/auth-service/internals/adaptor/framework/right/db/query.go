@@ -48,7 +48,7 @@ func GetUserByEmailQuery() string {
 }
 
 func GetUserByIdQuery() string {
-	return `SELECT id, first_name, last_name, email, password, active, user_type, branch_id, created_at, updated_at
+	return `SELECT id, first_name, last_name, email, password, active, created_at, updated_at
 		FROM users
 		WHERE id=$1`
 }

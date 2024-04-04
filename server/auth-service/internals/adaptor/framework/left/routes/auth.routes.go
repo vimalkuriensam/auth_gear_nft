@@ -7,5 +7,5 @@ func (ra *Adaptor) AuthRoutes(r chi.Router) {
 	r.Post("/loginUser", ra.api.LoginUserApi)
 	r.Post("/registerUser", ra.api.RegisterUserApi)
 	r.Patch("/updateUser", ra.api.UpdateUserApi)
-	r.Delete("/deleteUser", ra.api.DeleteUserApi)
+	r.Delete("/deleteUser/{id}", ra.api.DeleteUserApi)
 }

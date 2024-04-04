@@ -33,6 +33,7 @@ func (appAd *Adaptor) GetUserApi(w http.ResponseWriter, req *http.Request) {
 		appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
 		return
 	}
+	user.Password = ""
 	appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User Fetched")
 }
 
@@ -41,16 +42,23 @@ func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {
 	if err == nil {
 		user, err := appAd.db.GetUserByEmail(user_data.Email)
 		if err != nil {
-			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, "invalid credentials", err.Error())
+			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, "invalid credentials")
 			return
 		}
 		isPasswordMatch := appAd.controller.ComparePassword(user.Password, user_data.Password)
 		if !isPasswordMatch {
-			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, "invalid credentials", err.Error())
+			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, "invalid credentials")
 			return
 		}
+		token, err := appAd.controller.GenerateJWTToken(user)
+		if err != nil {
+			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
+		}
 		user.Password = ""
-		appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User LoggedIn")
+		var response models.UserResponse
+		response.User = user
+		response.Token = token
+		appAd.controller.PrintRegistration(w, req, true, http.StatusOK, response, "User login successful")
 	} else {
 		appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
 	}
@@ -85,4 +93,22 @@ func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) 
 
 func (appAd *Adaptor) UpdateUserApi(w http.ResponseWriter, req *http.Request) {}
 
-func (appAd *Adaptor) DeleteUserApi(w http.ResponseWriter, req *http.Request) {}
+func (appAd *Adaptor) DeleteUserApi(w http.ResponseWriter, req *http.Request) {
+	id := chi.URLParam(req, "id")
+	id_num, err := strconv.Atoi(id)
+	if err != nil {
+		appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	user, err := appAd.db.GetUserByID(uint(id_num))
+	if err != nil {
+		appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, "user does not exist")
+		return
+	}
+	if err = appAd.db.DeleteUserByID(uint(id_num)); err != nil {
+		appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, "error deleting user")
+		return
+	}
+	user.Password = ""
+	appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, user, "User Deleted")
+}
