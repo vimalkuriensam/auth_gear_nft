@@ -35,7 +35,25 @@ func (appAd *Adaptor) GetUserApi(w http.ResponseWriter, req *http.Request) {
 	appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User Fetched")
 }
 
-func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {}
+func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {
+	user_data, err := appAd.controller.ReadUserRequestController(w, req)
+	if err == nil {
+		user, err := appAd.db.GetUserByEmail(user_data.Email)
+		if err != nil {
+			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, "invalid credentials", err.Error())
+			return
+		}
+		isPasswordMatch := appAd.controller.ComparePassword(user.Password, user_data.Password)
+		if !isPasswordMatch {
+			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, "invalid credentials", err.Error())
+			return
+		}
+		user.Password = ""
+		appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User LoggedIn")
+	} else {
+		appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
+	}
+}
 
 func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) {
 	user_data, err := appAd.controller.ReadUserRequestController(w, req)

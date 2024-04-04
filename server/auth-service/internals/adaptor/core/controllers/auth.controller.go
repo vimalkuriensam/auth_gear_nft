@@ -20,7 +20,9 @@ func (cAd *Adaptor) ReadUserRequestController(w http.ResponseWriter, req *http.R
 	return userReq, nil
 }
 
-func (cAd *Adaptor) LoginController(w http.ResponseWriter, req *http.Request) {}
+func (cAd *Adaptor) LoginController(w http.ResponseWriter, req *http.Request) {
+
+}
 
 func (cAd *Adaptor) GetUserController(w http.ResponseWriter, req *http.Request) {}
 
