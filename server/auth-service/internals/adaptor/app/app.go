@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
 	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
 )
 
@@ -65,7 +66,14 @@ func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) 
 		}
 		user_data.Password = string(hash)
 		if inserted_data, err := appAd.db.InsertUser(user_data); err == nil {
-			appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, inserted_data, "User Created")
+			token, err := appAd.controller.GenerateJWTToken(inserted_data)
+			if err != nil {
+				appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
+			}
+			var responseData models.UserResponse
+			responseData.User = user_data
+			responseData.Token = token
+			appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, responseData, "User Created")
 		} else {
 			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
 		}

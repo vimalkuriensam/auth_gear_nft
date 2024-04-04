@@ -12,3 +12,8 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
+
+type UserResponse struct {
+	User  User   `json:"user"`
+	Token string `json:"token"`
+}

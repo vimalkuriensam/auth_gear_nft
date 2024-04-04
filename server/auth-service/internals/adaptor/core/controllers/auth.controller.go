@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -44,4 +45,21 @@ func (cAd *Adaptor) PaswordHash(password string) ([]byte, error) {
 
 func (cAd *Adaptor) ComparePassword(hash, password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
+}
+
+func (cAd *Adaptor) GenerateJWTToken(user models.User) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"aud": user.ID,
+		// "exp": time.Now().Add(30 * time.Minute).Unix(),
+	})
+	tokenKey, ok := cAd.config.GetConfig().Env["jwt_key"].(string)
+	if !ok {
+		return "", errors.New("jwt key not set in environment")
+	}
+	tokenKeyBytes := []byte(tokenKey)
+	tokenString, err := token.SignedString(tokenKeyBytes)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }

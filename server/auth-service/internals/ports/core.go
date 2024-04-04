@@ -15,6 +15,7 @@ type AuthController interface {
 	PrintRegistration(http.ResponseWriter, *http.Request, bool, int, interface{}, string)
 	PaswordHash(password string) ([]byte, error)
 	ComparePassword(hash, password string) bool
+	GenerateJWTToken(models.User) (string, error)
 }
 
 type ConfigPort interface {
