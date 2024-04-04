@@ -13,6 +13,8 @@ type AuthController interface {
 	UpdateController(http.ResponseWriter, *http.Request)
 	DeleteController(http.ResponseWriter, *http.Request)
 	PrintRegistration(http.ResponseWriter, *http.Request, bool, int, interface{}, string)
+	PaswordHash(password string) ([]byte, error)
+	ComparePassword(hash, password string) bool
 }
 
 type ConfigPort interface {

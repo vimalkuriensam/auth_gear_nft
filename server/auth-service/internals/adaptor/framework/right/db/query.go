@@ -14,7 +14,7 @@ func CreateUserTableQuery() string {
 }
 
 func AlterTableIDSequence() string {
-	return `ALTER SEQUENCE ID restart 1000`
+	return `ALTER SEQUENCE users_id_seq restart 1000 OWNED BY users.id`
 }
 
 func InsertUserQuery() string {

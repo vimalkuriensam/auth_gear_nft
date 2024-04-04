@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (cAd *Adaptor) ReadUserRequestController(w http.ResponseWriter, req *http.Request) (models.User, error) {
@@ -33,4 +34,12 @@ func (cAd *Adaptor) PrintRegistration(w http.ResponseWriter, req *http.Request, 
 	} else {
 		cAd.config.ErrorJSON(w, req.URL.Path, msg, status)
 	}
+}
+
+func (cAd *Adaptor) PaswordHash(password string) ([]byte, error) {
+	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+}
+
+func (cAd *Adaptor) ComparePassword(hash, password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
 }

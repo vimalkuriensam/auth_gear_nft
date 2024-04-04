@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -41,10 +40,15 @@ func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {}
 func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) {
 	user_data, err := appAd.controller.ReadUserRequestController(w, req)
 	if err == nil {
+		hash, err := appAd.controller.PaswordHash(user_data.Password)
+		if err != nil {
+			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
+			return
+		}
+		user_data.Password = string(hash)
 		if inserted_data, err := appAd.db.InsertUser(user_data); err == nil {
 			appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, inserted_data, "User Created")
 		} else {
-			fmt.Println(err.Error())
 			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
 		}
 	} else {
