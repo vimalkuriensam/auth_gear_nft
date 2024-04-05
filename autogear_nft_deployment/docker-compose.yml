@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+
+  agnft-auth_pg_db:
+      image: postgres:14.1-alpine
+      container_name: agnft_auth-db
+      restart: always
+      env_file:
+        - ../environment/postgres.env
+      ports:
+        - '5432:5432'
+      volumes:
+        - ../app-data/pg:/var/lib/postgresql/data
+      networks:
+        - autogear-nft-service
+
+
+networks:
+  autogear-nft-service:
