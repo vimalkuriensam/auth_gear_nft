@@ -55,3 +55,15 @@ func (cfgAd *Adaptor) ErrorJSON(w http.ResponseWriter, path string, reason strin
 	}
 	cfgAd.WriteJSON(w, errorStatus, cfg.Error, "Error")
 }
+
+func (cfgAd *Adaptor) InitMessages(id string) {
+	cfgAd.config.Queue.Messages[id] = make(chan models.Payload)
+}
+
+func (cfgAd *Adaptor) SetMessage(id string, payload models.Payload) {
+	cfgAd.config.Queue.Messages[id] <- payload
+}
+
+func (cfgAd *Adaptor) DeleteMessage(id string) {
+	delete(cfgAd.config.Queue.Messages, id)
+}

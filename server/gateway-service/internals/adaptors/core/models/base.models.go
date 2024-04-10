@@ -3,6 +3,8 @@ package models
 import (
 	"log"
 	"time"
+
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type Config struct {
@@ -11,6 +13,7 @@ type Config struct {
 	Logger   *log.Logger
 	Response *JSONResponse
 	Error    *ErrorResponse
+	Queue    *Queue
 }
 
 type JSONResponse struct {
@@ -28,4 +31,10 @@ type ErrorResponse struct {
 type ReadValue struct {
 	B []byte
 	D interface{}
+}
+
+type Queue struct {
+	Connection *amqp.Connection
+	Channel    *amqp.Channel
+	Messages   map[string]chan Payload
 }

@@ -12,4 +12,7 @@ type ConfigPort interface {
 	ReadJSON(*http.Request) (models.ReadValue, error)
 	WriteJSON(http.ResponseWriter, int, interface{}, string, ...http.Header)
 	ErrorJSON(http.ResponseWriter, string, string, ...int)
+	InitMessages(string)
+	SetMessage(string, models.Payload)
+	DeleteMessage(string)
 }

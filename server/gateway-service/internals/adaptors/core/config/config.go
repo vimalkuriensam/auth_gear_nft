@@ -31,6 +31,11 @@ func Initialize() *Adaptor {
 		Logger:   log.New(os.Stdout, "", log.Ldate|log.Ltime),
 		Response: &models.JSONResponse{},
 		Error:    &models.ErrorResponse{},
+		Queue: &models.Queue{
+			Connection: nil,
+			Channel:    nil,
+			Messages:   make(map[string]chan models.Payload),
+		},
 	}
 	return &Adaptor{
 		environment: "",
