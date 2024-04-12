@@ -57,8 +57,8 @@ func (cfgAd *Adaptor) ErrorJSON(w http.ResponseWriter, path string, reason strin
 	cfgAd.WriteJSON(w, errorStatus, cfg.Error, "Error")
 }
 
-func (cfgAd *Adaptor) SuccessResponse(message string, code int32, data []byte) pb.RegisterResponse {
-	return pb.RegisterResponse{
+func (cfgAd *Adaptor) SuccessResponse(message string, code int32, data []byte) pb.AuthResponse {
+	return pb.AuthResponse{
 		Success:   true,
 		Code:      code,
 		Data:      data,
@@ -67,8 +67,8 @@ func (cfgAd *Adaptor) SuccessResponse(message string, code int32, data []byte) p
 	}
 }
 
-func (cfgAd *Adaptor) ErrorResponse(message string, code int32) pb.RegisterResponse {
-	return pb.RegisterResponse{
+func (cfgAd *Adaptor) ErrorResponse(message string, code int32) pb.AuthResponse {
+	return pb.AuthResponse{
 		Success:   false,
 		Code:      code,
 		Message:   message,

@@ -25,6 +25,6 @@ type ConfigPort interface {
 	ReadJSON(*http.Request) (models.ReadValue, error)
 	WriteJSON(http.ResponseWriter, int, interface{}, string, ...http.Header)
 	ErrorJSON(http.ResponseWriter, string, string, ...int)
-	SuccessResponse(string, int32, []byte) pb.RegisterResponse
-	ErrorResponse(string, int32) pb.RegisterResponse
+	SuccessResponse(string, int32, []byte) pb.AuthResponse
+	ErrorResponse(string, int32) pb.AuthResponse
 }

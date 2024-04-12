@@ -35,7 +35,7 @@ func (grpcAd *Adaptor) Listen() {
 	}
 }
 
-func (grpcAd *Adaptor) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+func (grpcAd *Adaptor) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.AuthResponse, error) {
 	user := models.User{
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
@@ -43,5 +43,14 @@ func (grpcAd *Adaptor) Register(ctx context.Context, req *pb.RegisterRequest) (*
 		Password:  req.Password,
 	}
 	resp := grpcAd.app.CreateGRPCUserApi(user)
+	return &resp, nil
+}
+
+func (grpcAd *Adaptor) Login(ctx context.Context, req *pb.LoginRequest) (*pb.AuthResponse, error) {
+	user := models.User{
+		Email:    req.Email,
+		Password: req.Password,
+	}
+	resp := grpcAd.app.LoginGRPCUserApi(user)
 	return &resp, nil
 }

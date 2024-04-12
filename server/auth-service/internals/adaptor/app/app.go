@@ -43,7 +43,7 @@ func (appAd *Adaptor) GetUserApi(w http.ResponseWriter, req *http.Request) {
 	appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User Fetched")
 }
 
-func (appAd *Adaptor) CreateGRPCUserApi(user models.User) pb.RegisterResponse {
+func (appAd *Adaptor) CreateGRPCUserApi(user models.User) pb.AuthResponse {
 	hash, err := appAd.controller.PaswordHash(user.Password)
 	if err != nil {
 		return appAd.config.ErrorResponse(constants.PASSWORD_HASH_ERROR, http.StatusInternalServerError)
@@ -90,6 +90,27 @@ func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {
 	} else {
 		appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
 	}
+}
+
+func (appAd *Adaptor) LoginGRPCUserApi(user models.User) pb.AuthResponse {
+	user, err := appAd.db.GetUserByEmail(user.Email)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.INVALID_USER_ERROR, http.StatusBadRequest)
+	}
+	isPasswordMatch := appAd.controller.ComparePassword(user.Password, user.Password)
+	if !isPasswordMatch {
+		return appAd.config.ErrorResponse(constants.INVALID_USER_ERROR, http.StatusBadRequest)
+	}
+	token, err := appAd.controller.GenerateJWTToken(user)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.TOKEN_GENERATION_ERROR, http.StatusInternalServerError)
+	}
+	user.Password = ""
+	var userResponse models.UserResponse
+	userResponse.User = user
+	userResponse.Token = token
+	bt, _ := json.Marshal(userResponse)
+	return appAd.config.SuccessResponse(constants.LOGIN_SUCCESS, http.StatusCreated, bt)
 }
 
 func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) {
