@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/models"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

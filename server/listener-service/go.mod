@@ -1,4 +1,4 @@
-module github.com/vimalkuriensam/auth_gear_nft/listener-service
+module github.com/vimalkuriensam/auto_gear_nft/listener-service
 
 go 1.21.1
 

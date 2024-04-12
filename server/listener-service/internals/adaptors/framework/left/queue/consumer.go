@@ -8,8 +8,8 @@ import (
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/core/models"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/ports"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/ports"
 )
 
 type Adaptor struct {

@@ -1,6 +1,6 @@
 package http2
 
-import "github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/ports"
+import "github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/ports"
 
 type Adaptor struct {
 	config ports.ConfigPort

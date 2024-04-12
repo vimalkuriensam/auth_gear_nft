@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/models"
 )
 
 func (authAd *Adaptor) ReadUser(data []byte) models.User {

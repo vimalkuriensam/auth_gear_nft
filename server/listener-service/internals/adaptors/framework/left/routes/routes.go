@@ -3,8 +3,8 @@ package routes
 import (
 	"strings"
 
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/core/models"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/ports"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/ports"
 )
 
 type Adaptor struct {

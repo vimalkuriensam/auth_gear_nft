@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/spf13/viper"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/models"
 )
 
 const DEFAULT_ENVIRONMENT = "development"

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/app"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/core/config"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/core/controllers"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/framework/left/queue"
-	"github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adaptors/framework/left/routes"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/app"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/config"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/controllers"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/framework/left/queue"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/framework/left/routes"
 )
 
 func main() {
