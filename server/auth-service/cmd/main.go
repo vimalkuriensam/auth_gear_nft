@@ -20,7 +20,7 @@ func main() {
 	if err := dbPort.DBInit(); err != nil {
 		configPort.GetConfig().Logger.Fatalf("unable to initialize db: %v\n", err)
 	}
-	apiPort := app.Initialize(dbPort, controllerPort)
+	apiPort := app.Initialize(configPort, dbPort, controllerPort)
 	routesPort := routes.Initialize(apiPort)
 	//Initialize and start the server
 	serverPort := server.Initialize(configPort, routesPort)

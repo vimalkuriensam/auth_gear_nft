@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
+	pb "github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/http2/proto"
 )
 
 func (cfgAd *Adaptor) ReadJSON(req *http.Request) (models.ReadValue, error) {
@@ -54,4 +55,24 @@ func (cfgAd *Adaptor) ErrorJSON(w http.ResponseWriter, path string, reason strin
 		Timestamp: time.Now(),
 	}
 	cfgAd.WriteJSON(w, errorStatus, cfg.Error, "Error")
+}
+
+func (cfgAd *Adaptor) SuccessResponse(message string, code int32, data []byte) pb.RegisterResponse {
+	return pb.RegisterResponse{
+		Success:   true,
+		Code:      code,
+		Data:      data,
+		Message:   message,
+		Timestamp: time.Now().String(),
+	}
+}
+
+func (cfgAd *Adaptor) ErrorResponse(message string, code int32) pb.RegisterResponse {
+	return pb.RegisterResponse{
+		Success:   false,
+		Code:      code,
+		Message:   message,
+		Data:      []byte{},
+		Timestamp: time.Now().String(),
+	}
 }

@@ -1,21 +1,26 @@
 package app
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
 	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/ports"
+
+	pb "github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/http2/proto"
 )
 
 type Adaptor struct {
+	config     ports.ConfigPort
 	db         ports.DBPort
 	controller ports.AuthController
 }
 
-func Initialize(db ports.DBPort, ctrl ports.AuthController) *Adaptor {
+func Initialize(config ports.ConfigPort, db ports.DBPort, ctrl ports.AuthController) *Adaptor {
 	return &Adaptor{
+		config:     config,
 		controller: ctrl,
 		db:         db,
 	}
@@ -35,6 +40,28 @@ func (appAd *Adaptor) GetUserApi(w http.ResponseWriter, req *http.Request) {
 	}
 	user.Password = ""
 	appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User Fetched")
+}
+
+func (appAd *Adaptor) CreateGRPCUserApi(user models.User) pb.RegisterResponse {
+	hash, err := appAd.controller.PaswordHash(user.Password)
+	if err != nil {
+		return appAd.config.ErrorResponse("error hashing password", http.StatusInternalServerError)
+	}
+	user.Password = string(hash)
+	if inserted_data, err := appAd.db.InsertUser(user); err == nil {
+		token, err := appAd.controller.GenerateJWTToken(inserted_data)
+		if err != nil {
+			return appAd.config.ErrorResponse("error generating token", http.StatusInternalServerError)
+		}
+		var responseData models.UserResponse
+		inserted_data.Password = ""
+		responseData.User = inserted_data
+		responseData.Token = token
+		bt, _ := json.Marshal(responseData)
+		return appAd.config.SuccessResponse("User Registration Successful", http.StatusCreated, bt)
+	} else {
+		return appAd.config.ErrorResponse("error inserting data", http.StatusInternalServerError)
+	}
 }
 
 func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {
