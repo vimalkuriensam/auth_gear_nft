@@ -4,6 +4,7 @@ import (
 	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/app"
 	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/config"
 	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/controllers"
+	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/framework/left/http2"
 	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/framework/left/queue"
 	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/framework/left/routes"
 )
@@ -12,7 +13,8 @@ func main() {
 	configPort := config.Initialize()
 	configPort.LoadEnvironment()
 	controllersPort := controllers.Initialize()
-	apiPort := app.Initialize(controllersPort)
+	grpcPort := http2.Initialize(configPort)
+	apiPort := app.Initialize(controllersPort, grpcPort)
 	routesPort := routes.Initialize(apiPort)
 	queuePort := queue.Initialize(configPort, routesPort)
 	queuePort.Connect()

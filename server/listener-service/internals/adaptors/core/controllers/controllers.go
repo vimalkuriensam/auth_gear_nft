@@ -1,6 +1,7 @@
 package controllers
 
-type Adaptor struct{}
+type Adaptor struct {
+}
 
 func Initialize() *Adaptor {
 	return &Adaptor{}

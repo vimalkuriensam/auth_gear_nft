@@ -1,10 +1,13 @@
 package http2
 
 import (
+	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/core/models"
+	pb "github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adaptors/framework/left/http2/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -21,4 +24,22 @@ func (grpcAd *Adaptor) DialAuth() (*grpc.ClientConn, error) {
 	return grpc.Dial(authURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 }
 
-func (grpcAd *Adaptor) RegisterUser(user models.User) {}
+func (grpcAd *Adaptor) RegisterUser(user models.User) ([]byte, error) {
+	conn, err := grpcAd.DialAuth()
+	if err != nil {
+		return []byte{}, fmt.Errorf("unable to connect to auth service: %s", err.Error())
+	}
+	defer conn.Close()
+	c := pb.NewAuthenticationsClient(conn)
+	input := &pb.RegisterRequest{
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Password:  user.Password,
+		Email:     user.Email,
+	}
+	res, err := c.Register(context.Background(), input)
+	if err != nil {
+		return []byte{}, fmt.Errorf("error registering user: %s", err.Error())
+	}
+	return json.Marshal(res)
+}

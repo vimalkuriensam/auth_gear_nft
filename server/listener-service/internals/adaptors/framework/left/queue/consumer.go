@@ -1,7 +1,9 @@
 package queue
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"os"
@@ -145,4 +147,27 @@ func (qAd *Adaptor) Listen() {
 	go processMessage(msgs2, "queue2_request")
 	fmt.Println("Waiting for messages...")
 	select {}
+}
+
+func (qAd *Adaptor) Emit(event models.Payload) error {
+	channel := qAd.config.GetConfig().Queue.Channel
+	payloadAsbytes, err := json.Marshal(event)
+	if err != nil {
+		return err
+	}
+	if event.Type == "primary" {
+		return channel.PublishWithContext(context.Background(), "st-exchange", "queue2_key", false, false, amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        payloadAsbytes,
+		})
+
+	} else if event.Type == "secondary" {
+		return channel.PublishWithContext(context.Background(), "st-exchange", "queue3_key", false, false, amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        payloadAsbytes,
+		})
+	} else {
+		return errors.New("invalid route type")
+	}
+
 }

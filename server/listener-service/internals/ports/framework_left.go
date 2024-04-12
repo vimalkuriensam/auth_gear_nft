@@ -5,6 +5,7 @@ import "github.com/vimalkuriensam/auto_gear_nft/listener-service/internals/adapt
 type QueuePort interface {
 	Connect()
 	Listen()
+	Emit(models.Payload) error
 }
 
 type RoutesPort interface {
