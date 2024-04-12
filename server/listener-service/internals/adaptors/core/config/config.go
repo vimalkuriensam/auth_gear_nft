@@ -28,7 +28,10 @@ func Initialize() *Adaptor {
 	cfg = &models.Config{
 		Env:    make(map[string]any),
 		Logger: log.New(os.Stdout, "", log.Ldate|log.Ltime),
-		Queue:  nil,
+		Queue: &models.Queue{
+			Connection: nil,
+			Channel:    nil,
+		},
 	}
 	return &Adaptor{
 		environment: "",
