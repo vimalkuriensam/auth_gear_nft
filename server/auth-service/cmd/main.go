@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/app"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/config"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/controllers"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/framework/left/routes"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/framework/left/server"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/framework/right/db"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/app"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/config"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/controllers"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/routes"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/server"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/right/db"
 )
 
 func main() {

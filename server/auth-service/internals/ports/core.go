@@ -3,7 +3,7 @@ package ports
 import (
 	"net/http"
 
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
 )
 
 type AuthController interface {

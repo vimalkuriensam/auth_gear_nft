@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
 )
 
 func (cfgAd *Adaptor) ReadJSON(req *http.Request) (models.ReadValue, error) {

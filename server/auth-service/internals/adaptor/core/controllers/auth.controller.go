@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/ports"
 )
 
 type Adaptor struct {

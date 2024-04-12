@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/ports"
 )
 
 type Adaptor struct {
