@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/httplog v0.3.2
 	github.com/go-chi/httprate v0.9.0
+	github.com/google/uuid v1.4.0
 	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/spf13/viper v1.18.2
 )

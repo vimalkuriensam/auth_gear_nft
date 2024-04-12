@@ -16,3 +16,7 @@ type ConfigPort interface {
 	SetMessage(string, models.Payload)
 	DeleteMessage(string)
 }
+
+type ControllersPort interface {
+	CreateUser([]byte)
+}
