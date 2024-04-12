@@ -5,3 +5,7 @@ import "github.com/vimalkuriensam/auth_gear_nft/listener-service/internals/adapt
 type ConfigPort interface {
 	GetConfig() *models.Config
 }
+
+type ControllersPort interface {
+	ReadUser([]byte) models.User
+}

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"strings"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -15,13 +14,15 @@ import (
 
 type Adaptor struct {
 	config ports.ConfigPort
+	routes ports.RoutesPort
 }
 
 var adaptor *Adaptor
 
-func Initialize(config ports.ConfigPort) *Adaptor {
+func Initialize(config ports.ConfigPort, routes ports.RoutesPort) *Adaptor {
 	adaptor = &Adaptor{
 		config: config,
+		routes: routes,
 	}
 	return adaptor
 }
@@ -136,7 +137,7 @@ func (qAd *Adaptor) Listen() {
 			payload := models.Payload{}
 			json.Unmarshal(msg.Body, &payload)
 			fmt.Println("Processing", label)
-			qAd.RouteRequest(payload)
+			qAd.routes.RouteRequest(payload)
 			msg.Ack(false)
 		}
 	}
@@ -144,11 +145,4 @@ func (qAd *Adaptor) Listen() {
 	go processMessage(msgs2, "queue2_request")
 	fmt.Println("Waiting for messages...")
 	select {}
-}
-
-func (qAd *Adaptor) RouteRequest(payload models.Payload) {
-	splitStrings := strings.Split(payload.Kind, "_")
-	switch splitStrings[0] {
-
-	}
 }
