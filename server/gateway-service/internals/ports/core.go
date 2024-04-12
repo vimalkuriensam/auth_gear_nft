@@ -18,5 +18,6 @@ type ConfigPort interface {
 }
 
 type ControllersPort interface {
-	CreateUser([]byte)
+	CreateUser([]byte) models.PayloadData
+	DecodeUser([]byte) models.UserResponse
 }

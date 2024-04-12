@@ -10,5 +10,6 @@ type Adaptor struct {
 func Initialize(config ports.ConfigPort, queue ports.QueuePort) *Adaptor {
 	return &Adaptor{
 		config: config,
+		queue:  queue,
 	}
 }
