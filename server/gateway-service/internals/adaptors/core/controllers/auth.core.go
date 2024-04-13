@@ -7,19 +7,27 @@ import (
 	"github.com/vimalkuriensam/auth_gear_nft/gateway-service/internals/adaptors/core/models"
 )
 
-func (authAd Adaptor) CreateUser(input []byte) models.PayloadData {
-	payload := models.Payload{
+func (authAd Adaptor) GetPayload() models.Payload {
+	return models.Payload{
 		Id:   uuid.New().String(),
-		Kind: "Auth_Register",
+		Kind: "",
 		Type: "primary",
-		Data: input,
+		Data: []byte{},
 	}
-	authAd.config.InitMessages(payload.Id)
-	authAd.queue.Emit(payload)
-	reply := <-authAd.config.GetConfig().Queue.Messages[payload.Id]
-	var payloadData models.PayloadData
-	json.Unmarshal(reply.Data, &payloadData)
-	return payloadData
+}
+
+func (authAd Adaptor) CreateUser(input []byte) models.PayloadData {
+	payload := authAd.GetPayload()
+	payload.Kind = "Auth_Register"
+	payload.Data = input
+	return authAd.EmitData(payload)
+}
+
+func (authAd Adaptor) LoginUser(input []byte) models.PayloadData {
+	payload := authAd.GetPayload()
+	payload.Kind = "Auth_Login"
+	payload.Data = input
+	return authAd.EmitData(payload)
 }
 
 func (authAd Adaptor) DecodeUser(data []byte) models.UserResponse {
