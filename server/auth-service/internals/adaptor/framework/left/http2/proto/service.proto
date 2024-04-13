@@ -16,6 +16,10 @@ message LoginRequest {
     string password = 2;
 }
 
+message GetUserRequest {
+    int32 id = 1;
+}
+
 message AuthResponse {
     bool success = 1;
     string message = 2;
@@ -27,4 +31,5 @@ message AuthResponse {
 service Authentications {
     rpc Register(RegisterRequest) returns (AuthResponse);
     rpc Login(LoginRequest) returns (AuthResponse);
+    rpc GetUser(GetUserRequest) returns (AuthResponse);
 }

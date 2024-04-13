@@ -10,10 +10,9 @@ import (
 
 type AuthApiPort interface {
 	GetUserApi(http.ResponseWriter, *http.Request)
+	GetGRPCUserApi(user models.User) pb.AuthResponse
 	CreateGRPCUserApi(models.User) pb.AuthResponse
-	LoginUserApi(http.ResponseWriter, *http.Request)
 	LoginGRPCUserApi(models.User) pb.AuthResponse
-	RegisterUserApi(http.ResponseWriter, *http.Request)
 	UpdateUserApi(http.ResponseWriter, *http.Request)
 	DeleteUserApi(http.ResponseWriter, *http.Request)
 }
