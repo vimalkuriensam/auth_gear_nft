@@ -43,3 +43,38 @@ func (grpcAd *Adaptor) RegisterUser(user models.User) ([]byte, error) {
 	}
 	return json.Marshal(res)
 }
+
+func (grpcAd *Adaptor) LoginUser(user models.User) ([]byte, error) {
+	conn, err := grpcAd.DialAuth()
+	if err != nil {
+		return []byte{}, fmt.Errorf("unable to connect to auth service: %s", err.Error())
+	}
+	defer conn.Close()
+	c := pb.NewAuthenticationsClient(conn)
+	input := &pb.LoginRequest{
+		Email:    user.Email,
+		Password: user.Password,
+	}
+	res, err := c.Login(context.Background(), input)
+	if err != nil {
+		return []byte{}, fmt.Errorf("error logging user: %s", err.Error())
+	}
+	return json.Marshal(res)
+}
+
+func (grpcAd *Adaptor) GetUser(user models.User) ([]byte, error) {
+	conn, err := grpcAd.DialAuth()
+	if err != nil {
+		return []byte{}, fmt.Errorf("unable to connect to auth service: %s", err.Error())
+	}
+	defer conn.Close()
+	c := pb.NewAuthenticationsClient(conn)
+	input := &pb.GetUserRequest{
+		Id: user.Id,
+	}
+	res, err := c.GetUser(context.Background(), input)
+	if err != nil {
+		return []byte{}, fmt.Errorf("error getting user: %s", err.Error())
+	}
+	return json.Marshal(res)
+}

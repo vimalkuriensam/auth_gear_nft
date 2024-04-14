@@ -8,5 +8,9 @@ func (arAd *Adaptor) AuthRoutes(payload models.Payload, subRequest string) {
 	switch subRequest {
 	case "Register":
 		arAd.api.CreateUserApi(payload)
+	case "Login":
+		arAd.api.LoginUserApi(payload)
+	case "GetUser":
+		arAd.api.GetUserApi(payload)
 	}
 }

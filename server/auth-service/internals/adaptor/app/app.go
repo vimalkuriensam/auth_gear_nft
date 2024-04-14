@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -44,12 +45,14 @@ func (appAd *Adaptor) GetUserApi(w http.ResponseWriter, req *http.Request) {
 }
 
 func (appAd *Adaptor) GetGRPCUserApi(user models.User) pb.AuthResponse {
-	user, err := appAd.db.GetUserByID(user.ID)
+	fmt.Println(user.ID)
+	existingUser, err := appAd.db.GetUserByID(user.ID)
+	fmt.Println(existingUser)
 	if err != nil {
 		return appAd.config.ErrorResponse(constants.USER_NONEXIST, http.StatusBadRequest)
 	}
-	user.Password = ""
-	bt, _ := json.Marshal(user)
+	existingUser.Password = ""
+	bt, _ := json.Marshal(existingUser)
 	return appAd.config.SuccessResponse(constants.USER_FETCH_SUCCESS, http.StatusOK, bt)
 }
 
@@ -116,4 +119,17 @@ func (appAd *Adaptor) DeleteUserApi(w http.ResponseWriter, req *http.Request) {
 	}
 	user.Password = ""
 	appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, user, "User Deleted")
+}
+
+func (appAd *Adaptor) DeleteGRPCUserApi(user models.User) pb.AuthResponse {
+	user, err := appAd.db.GetUserByID(user.ID)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.USER_NONEXIST, http.StatusBadRequest)
+	}
+	if err = appAd.db.DeleteUserByID(user.ID); err != nil {
+		return appAd.config.ErrorResponse(constants.DELETE_ERROR, http.StatusInternalServerError)
+	}
+	user.Password = ""
+	bt, _ := json.Marshal(user)
+	return appAd.config.SuccessResponse(constants.DELETE_SUCCESS, http.StatusOK, bt)
 }

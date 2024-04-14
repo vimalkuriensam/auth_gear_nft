@@ -9,4 +9,6 @@ const (
 	DATA_INSERTION_ERROR   = "error inserting data"
 	INVALID_USER_ERROR     = "invalid user"
 	USER_NONEXIST          = "user does not exist"
+	DELETE_SUCCESS         = "user deleted"
+	DELETE_ERROR           = "user deletion failed"
 )

@@ -15,4 +15,5 @@ type AuthApiPort interface {
 	LoginGRPCUserApi(models.User) pb.AuthResponse
 	UpdateUserApi(http.ResponseWriter, *http.Request)
 	DeleteUserApi(http.ResponseWriter, *http.Request)
+	DeleteGRPCUserApi(user models.User) pb.AuthResponse
 }

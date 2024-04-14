@@ -55,10 +55,18 @@ func (grpcAd *Adaptor) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Aut
 	return &resp, nil
 }
 
-func (grpcAd *Adaptor) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.AuthResponse, error) {
+func (grpcAd *Adaptor) GetUser(ctx context.Context, req *pb.GetIDRequest) (*pb.AuthResponse, error) {
 	user := models.User{
 		ID: uint(req.Id),
 	}
 	resp := grpcAd.app.GetGRPCUserApi(user)
+	return &resp, nil
+}
+
+func (grpcAd *Adaptor) DeleteUser(ctx context.Context, req *pb.GetIDRequest) (*pb.AuthResponse, error) {
+	user := models.User{
+		ID: uint(req.Id),
+	}
+	resp := grpcAd.app.DeleteGRPCUserApi(user)
 	return &resp, nil
 }

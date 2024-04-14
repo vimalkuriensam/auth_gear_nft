@@ -8,4 +8,10 @@ run_agnft_queue:
 	@echo "Starting agnft queue service..."
 	docker-compose -f ./autogear_nft_deployment/docker-compose.yml stop agnft-queue
 	docker-compose -f ./autogear_nft_deployment/docker-compose.yml up --build -d agnft-queue
-	@echo "agnft queue services started..."		
+	@echo "agnft queue services started..."	
+
+run_agnft_services:
+	@echo "Starting agnft services..."
+	docker-compose -f ./autogear_nft_deployment/docker-compose.yml stop
+	docker-compose -f ./autogear_nft_deployment/docker-compose.yml up --build -d
+	@echo "agnft services started..."		
