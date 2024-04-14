@@ -3,7 +3,8 @@ package ports
 import (
 	"net/http"
 
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
+	pb "github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/http2/proto"
 )
 
 type AuthController interface {
@@ -24,4 +25,6 @@ type ConfigPort interface {
 	ReadJSON(*http.Request) (models.ReadValue, error)
 	WriteJSON(http.ResponseWriter, int, interface{}, string, ...http.Header)
 	ErrorJSON(http.ResponseWriter, string, string, ...int)
+	SuccessResponse(string, int32, []byte) pb.AuthResponse
+	ErrorResponse(string, int32) pb.AuthResponse
 }

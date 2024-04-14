@@ -2,7 +2,7 @@ package ports
 
 import (
 	"github.com/jackc/pgx/v5"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
 )
 
 type DBPort interface {

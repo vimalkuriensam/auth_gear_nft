@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/app"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/config"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/controllers"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/framework/left/routes"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/framework/left/server"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/framework/right/db"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/app"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/config"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/controllers"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/http2"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/routes"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/server"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/right/db"
 )
 
 func main() {
@@ -20,7 +21,9 @@ func main() {
 	if err := dbPort.DBInit(); err != nil {
 		configPort.GetConfig().Logger.Fatalf("unable to initialize db: %v\n", err)
 	}
-	apiPort := app.Initialize(dbPort, controllerPort)
+	apiPort := app.Initialize(configPort, dbPort, controllerPort)
+	grpcPort := http2.Initialize(apiPort)
+	grpcPort.Listen()
 	routesPort := routes.Initialize(apiPort)
 	//Initialize and start the server
 	serverPort := server.Initialize(configPort, routesPort)

@@ -1,6 +1,6 @@
 package controllers
 
-import "github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
+import "github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/ports"
 
 type Adaptor struct {
 	config ports.ConfigPort

@@ -1,21 +1,28 @@
 package app
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/adaptor/core/models"
-	"github.com/vimalkuriensam/auth_gear_nft/auth-service/internals/ports"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/core/models"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/ports"
+	"github.com/vimalkuriensam/auto_gear_nft/auth-service/pkg/constants"
+
+	pb "github.com/vimalkuriensam/auto_gear_nft/auth-service/internals/adaptor/framework/left/http2/proto"
 )
 
 type Adaptor struct {
+	config     ports.ConfigPort
 	db         ports.DBPort
 	controller ports.AuthController
 }
 
-func Initialize(db ports.DBPort, ctrl ports.AuthController) *Adaptor {
+func Initialize(config ports.ConfigPort, db ports.DBPort, ctrl ports.AuthController) *Adaptor {
 	return &Adaptor{
+		config:     config,
 		controller: ctrl,
 		db:         db,
 	}
@@ -37,58 +44,59 @@ func (appAd *Adaptor) GetUserApi(w http.ResponseWriter, req *http.Request) {
 	appAd.controller.PrintRegistration(w, req, true, http.StatusOK, user, "User Fetched")
 }
 
-func (appAd *Adaptor) LoginUserApi(w http.ResponseWriter, req *http.Request) {
-	user_data, err := appAd.controller.ReadUserRequestController(w, req)
-	if err == nil {
-		user, err := appAd.db.GetUserByEmail(user_data.Email)
+func (appAd *Adaptor) GetGRPCUserApi(user models.User) pb.AuthResponse {
+	fmt.Println(user.ID)
+	existingUser, err := appAd.db.GetUserByID(user.ID)
+	fmt.Println(existingUser)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.USER_NONEXIST, http.StatusBadRequest)
+	}
+	existingUser.Password = ""
+	bt, _ := json.Marshal(existingUser)
+	return appAd.config.SuccessResponse(constants.USER_FETCH_SUCCESS, http.StatusOK, bt)
+}
+
+func (appAd *Adaptor) CreateGRPCUserApi(user models.User) pb.AuthResponse {
+	hash, err := appAd.controller.PaswordHash(user.Password)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.PASSWORD_HASH_ERROR, http.StatusInternalServerError)
+	}
+	user.Password = string(hash)
+	if inserted_data, err := appAd.db.InsertUser(user); err == nil {
+		token, err := appAd.controller.GenerateJWTToken(inserted_data)
 		if err != nil {
-			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, "invalid credentials")
-			return
+			return appAd.config.ErrorResponse(constants.TOKEN_GENERATION_ERROR, http.StatusInternalServerError)
 		}
-		isPasswordMatch := appAd.controller.ComparePassword(user.Password, user_data.Password)
-		if !isPasswordMatch {
-			appAd.controller.PrintRegistration(w, req, false, http.StatusBadRequest, nil, "invalid credentials")
-			return
-		}
-		token, err := appAd.controller.GenerateJWTToken(user)
-		if err != nil {
-			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
-		}
-		user.Password = ""
-		var response models.UserResponse
-		response.User = user
-		response.Token = token
-		appAd.controller.PrintRegistration(w, req, true, http.StatusOK, response, "User login successful")
+		var responseData models.UserResponse
+		inserted_data.Password = ""
+		responseData.User = inserted_data
+		responseData.Token = token
+		bt, _ := json.Marshal(responseData)
+		return appAd.config.SuccessResponse(constants.REGISTRATION_SUCCESS, http.StatusCreated, bt)
 	} else {
-		appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
+		return appAd.config.ErrorResponse(constants.DATA_INSERTION_ERROR, http.StatusInternalServerError)
 	}
 }
 
-func (appAd *Adaptor) RegisterUserApi(w http.ResponseWriter, req *http.Request) {
-	user_data, err := appAd.controller.ReadUserRequestController(w, req)
-	if err == nil {
-		hash, err := appAd.controller.PaswordHash(user_data.Password)
-		if err != nil {
-			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
-			return
-		}
-		user_data.Password = string(hash)
-		if inserted_data, err := appAd.db.InsertUser(user_data); err == nil {
-			token, err := appAd.controller.GenerateJWTToken(inserted_data)
-			if err != nil {
-				appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
-			}
-			var responseData models.UserResponse
-			inserted_data.Password = ""
-			responseData.User = inserted_data
-			responseData.Token = token
-			appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, responseData, "User Created")
-		} else {
-			appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
-		}
-	} else {
-		appAd.controller.PrintRegistration(w, req, false, http.StatusInternalServerError, nil, err.Error())
+func (appAd *Adaptor) LoginGRPCUserApi(user models.User) pb.AuthResponse {
+	existingUser, err := appAd.db.GetUserByEmail(user.Email)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.INVALID_USER_ERROR, http.StatusBadRequest)
 	}
+	isPasswordMatch := appAd.controller.ComparePassword(existingUser.Password, user.Password)
+	if !isPasswordMatch {
+		return appAd.config.ErrorResponse(constants.INVALID_USER_ERROR, http.StatusBadRequest)
+	}
+	token, err := appAd.controller.GenerateJWTToken(existingUser)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.TOKEN_GENERATION_ERROR, http.StatusInternalServerError)
+	}
+	existingUser.Password = ""
+	var userResponse models.UserResponse
+	userResponse.User = existingUser
+	userResponse.Token = token
+	bt, _ := json.Marshal(userResponse)
+	return appAd.config.SuccessResponse(constants.LOGIN_SUCCESS, http.StatusCreated, bt)
 }
 
 func (appAd *Adaptor) UpdateUserApi(w http.ResponseWriter, req *http.Request) {}
@@ -111,4 +119,18 @@ func (appAd *Adaptor) DeleteUserApi(w http.ResponseWriter, req *http.Request) {
 	}
 	user.Password = ""
 	appAd.controller.PrintRegistration(w, req, true, http.StatusCreated, user, "User Deleted")
+}
+
+func (appAd *Adaptor) DeleteGRPCUserApi(user models.User) pb.AuthResponse {
+	user, err := appAd.db.GetUserByID(user.ID)
+	fmt.Println(user)
+	if err != nil {
+		return appAd.config.ErrorResponse(constants.USER_NONEXIST, http.StatusBadRequest)
+	}
+	if err = appAd.db.DeleteUserByID(user.ID); err != nil {
+		return appAd.config.ErrorResponse(constants.DELETE_ERROR, http.StatusInternalServerError)
+	}
+	user.Password = ""
+	bt, _ := json.Marshal(user)
+	return appAd.config.SuccessResponse(constants.DELETE_SUCCESS, http.StatusOK, bt)
 }

@@ -15,6 +15,20 @@ services:
       networks:
         - autogear-nft-service
 
+  agnft-queue:
+    image: rabbitmq:3.12.10-alpine
+    container_name: agnft-queue
+    ports:
+      - 5672:5672
+      - 15672:15672
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - ../app-data/rabbitmq:/var/lib/rabbitmq/
+    networks:
+        - autogear-nft-service
+
 
 networks:
   autogear-nft-service:
