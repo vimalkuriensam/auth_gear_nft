@@ -13,6 +13,6 @@ func (arAd *Adaptor) AuthRoutes(payload models.Payload, subRequest string) {
 	case "GetUser":
 		arAd.api.GetUserApi(payload)
 	case "DeleteUser":
-
+		arAd.api.DeleteUserApi(payload)
 	}
 }

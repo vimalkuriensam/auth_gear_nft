@@ -22,6 +22,7 @@ type ControllersPort interface {
 	CreateUser([]byte) models.PayloadData
 	LoginUser([]byte) models.PayloadData
 	GetUser([]byte) models.PayloadData
+	DeleteUser([]byte) models.PayloadData
 	DecodeUserResponse([]byte) models.UserResponse
 	DecodeUser([]byte) models.User
 	EmitData(models.Payload) models.PayloadData

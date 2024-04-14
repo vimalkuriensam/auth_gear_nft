@@ -37,6 +37,13 @@ func (authAd *Adaptor) GetUser(input []byte) models.PayloadData {
 	return authAd.EmitData(payload)
 }
 
+func (authAd *Adaptor) DeleteUser(input []byte) models.PayloadData {
+	payload := authAd.GetPayload()
+	payload.Kind = "Auth_DeleteUser"
+	payload.Data = input
+	return authAd.EmitData(payload)
+}
+
 func (authAd Adaptor) DecodeUserResponse(data []byte) models.UserResponse {
 	var resp models.UserResponse
 	json.Unmarshal(data, &resp)

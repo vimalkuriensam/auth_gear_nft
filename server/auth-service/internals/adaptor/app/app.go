@@ -123,6 +123,7 @@ func (appAd *Adaptor) DeleteUserApi(w http.ResponseWriter, req *http.Request) {
 
 func (appAd *Adaptor) DeleteGRPCUserApi(user models.User) pb.AuthResponse {
 	user, err := appAd.db.GetUserByID(user.ID)
+	fmt.Println(user)
 	if err != nil {
 		return appAd.config.ErrorResponse(constants.USER_NONEXIST, http.StatusBadRequest)
 	}

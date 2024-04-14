@@ -6,4 +6,5 @@ type AuthApiPort interface {
 	GetUserApi(models.Payload)
 	CreateUserApi(models.Payload)
 	LoginUserApi(models.Payload)
+	DeleteUserApi(models.Payload)
 }
