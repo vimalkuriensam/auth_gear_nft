@@ -16,7 +16,7 @@ message LoginRequest {
     string password = 2;
 }
 
-message GetUserRequest {
+message GetIDRequest {
     int32 id = 1;
 }
 
@@ -31,5 +31,6 @@ message AuthResponse {
 service Authentications {
     rpc Register(RegisterRequest) returns (AuthResponse);
     rpc Login(LoginRequest) returns (AuthResponse);
-    rpc GetUser(GetUserRequest) returns (AuthResponse);
+    rpc GetUser(GetIDRequest) returns (AuthResponse);
+    rpc DeleteUser(GetIDRequest) returns(AuthResponse);
 }

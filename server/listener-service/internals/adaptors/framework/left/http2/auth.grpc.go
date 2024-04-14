@@ -69,10 +69,27 @@ func (grpcAd *Adaptor) GetUser(user models.User) ([]byte, error) {
 	}
 	defer conn.Close()
 	c := pb.NewAuthenticationsClient(conn)
-	input := &pb.GetUserRequest{
+	input := &pb.GetIDRequest{
 		Id: user.Id,
 	}
 	res, err := c.GetUser(context.Background(), input)
+	if err != nil {
+		return []byte{}, fmt.Errorf("error getting user: %s", err.Error())
+	}
+	return json.Marshal(res)
+}
+
+func (grpcAd *Adaptor) DeleteUser(user models.User) ([]byte, error) {
+	conn, err := grpcAd.DialAuth()
+	if err != nil {
+		return []byte{}, fmt.Errorf("unable to connect to auth service: %s", err.Error())
+	}
+	defer conn.Close()
+	c := pb.NewAuthenticationsClient(conn)
+	input := &pb.GetIDRequest{
+		Id: user.Id,
+	}
+	res, err := c.DeleteUser(context.Background(), input)
 	if err != nil {
 		return []byte{}, fmt.Errorf("error getting user: %s", err.Error())
 	}

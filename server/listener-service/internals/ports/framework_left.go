@@ -21,4 +21,5 @@ type GRPCPort interface {
 	RegisterUser(models.User) ([]byte, error)
 	LoginUser(models.User) ([]byte, error)
 	GetUser(models.User) ([]byte, error)
+	DeleteUser(models.User) ([]byte, error)
 }

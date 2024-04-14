@@ -12,5 +12,7 @@ func (arAd *Adaptor) AuthRoutes(payload models.Payload, subRequest string) {
 		arAd.api.LoginUserApi(payload)
 	case "GetUser":
 		arAd.api.GetUserApi(payload)
+	case "DeleteUser":
+
 	}
 }

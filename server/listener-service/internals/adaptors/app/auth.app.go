@@ -40,3 +40,15 @@ func (appAd *Adaptor) GetUserApi(payload models.Payload) {
 		Data: respBytes,
 	})
 }
+
+func (appAd *Adaptor) DeleteUserApi(payload models.Payload) {
+	user := appAd.ctrl.ReadUser(payload.Data)
+	respBytes, _ := appAd.grpc.DeleteUser(user)
+	queueAdaptor := queue.GetAdaptor()
+	queueAdaptor.Emit(models.Payload{
+		Id:   payload.Id,
+		Kind: "Auth_DeleteUser",
+		Type: payload.Type,
+		Data: respBytes,
+	})
+}
