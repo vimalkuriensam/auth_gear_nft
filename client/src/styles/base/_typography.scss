@@ -39,47 +39,41 @@
 }
 
 .title {
-  color: $color-grey-dark;
-  font-size: 1.8rem;
+  color: $color-black-2;
+  font-size: 3.2rem;
   font-family: "inter-bold";
   display: inline-block;
 
-  &--ib-56-1 {
-    font-size: 5.6rem;
-    color: #191a15;
-  }
-
   &--ib-32-1 {
     font-size: 3.2rem;
-    color: #191a15;
   }
 
-  &--ib-28-1 {
-    font-size: 2.8rem;
-    color: #191a15;
+  &--ib-24-1 {
+    font-size: 2.4rem;
+  }
+
+  &--ib-22-1 {
+    font-size: 2.2rem;
   }
 
   &--ib-18-1 {
     font-size: 1.8rem;
-    color: #18191f;
   }
 
-  &--ib-15-1 {
+  &--im-16-1 {
+    font-size: 1.6rem;
+    font-family: "inter-medium";
+  }
+
+  &--ir-16-1 {
+    font-size: 1.6rem;
+    font-family: "inter-regular";
+  }
+
+  &--ir-14-1 {
     font-size: 1.4rem;
-    font-family: "inter-bold";
-    color: "#463209"
-  }
-
-  &--isb-30-1 {
-    font-family: "inter-semi-bold";
-    font-size: 3rem;
-    color: #191a15;
-  }
-
-  &--isb-48-1 {
-    font-family: "inter-semi-bold";
-    font-size: 4.8rem;
-    color: #191a15;
+    font-family: "inter-regular";
+    color: #637587;
   }
 }
 

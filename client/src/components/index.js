@@ -1,2 +1,2 @@
-export { Button, Icon } from "./atoms";
+export { Button, Icon, Title } from "./atoms";
 export { Loader } from "./organisms";
