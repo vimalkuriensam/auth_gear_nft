@@ -8,6 +8,11 @@ import utilsReducer from "../reducers/utils.reducer";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+const middleware =
+  process.env.NODE_ENV === "development"
+    ? applyMiddleware(thunk, logger)
+    : applyMiddleware(thunk);
+
 const encryptor = encryptTransform({
   secretKey: "dummy-secret",
   onError: function (error) {
@@ -29,7 +34,7 @@ const store = createStore(
       utils: utilsReducer,
     })
   ),
-  composeEnhancers(applyMiddleware(thunk, logger))
+  composeEnhancers(middleware)
 );
 
 const persistor = persistStore(store);

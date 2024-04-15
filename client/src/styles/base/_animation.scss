@@ -1,0 +1,98 @@
+@keyframes moveInTop {
+  0% {
+    transform: translate(-50%, -50rem);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes moveInVisible {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes moveInBottom {
+  0% {
+    transform: translateY(-50%, -50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50rem);
+    opacity: 0;
+  }
+}
+
+@keyframes moveInBig {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes uploadAnimation {
+  0% {
+    margin: 20rem;
+    width: 100%;
+  }
+
+  100% {
+    margin-top: 0;
+  }
+}
+
+@keyframes tableAppearance {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+
+@keyframes moveInLeft {
+  0% {
+    transform: translate(20rem, 0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes moveInRight {
+  0% {
+    transform: translate(0rem, 0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(20rem, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes radial-flow {
+  0% {
+    background-position: 0% 100%; /* Starting position at top right */
+  }
+  100% {
+    background-position: 100% 0%; /* Ending position at bottom left */
+  }
+}
