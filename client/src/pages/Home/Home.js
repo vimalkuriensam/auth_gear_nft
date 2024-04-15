@@ -1,12 +1,16 @@
 import React from "react";
 
-import { Title } from "../../components";
+import { TitleHead } from "../../components";
+import { CONSTANTS } from "../../utils/data";
 
 const Home = () => {
   return (
-    <div>
-      <Title>Discover Cars</Title>
-    </div>
+    <section className="section-home">
+      <TitleHead
+        title={CONSTANTS.HOME_TITLE}
+        subTitle={CONSTANTS.HOME_SUBTITLE}
+      />
+    </section>
   );
 };
 
